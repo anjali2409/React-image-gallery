@@ -1,53 +1,17 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Card from "./Card";
+import { useDispatch, useSelector } from "react-redux";
+import { decrement, increment } from "./counterSlice";
+
 function App() {
-  const [userData, setuserData] = useState([]);
-  const [index, setIndex] = useState(1);
-  const getData = async () => {
-    const response = await axios.get(
-      `https://picsum.photos/v2/list?page=${index}&limit=10`,
-    );
-    setuserData(response.data);
-  };
-  useEffect(
-    function () {
-      getData();
-    },
-    [index],
-  );
-  let printUserData = <h3>Loading .....</h3>;
-  if (userData.length > 0) {
-    printUserData = userData.map(function (elem, idx) {
-      return (
-        <div key={idx}>
-          <Card elem={elem} />
-        </div>
-      );
-    });
-  }
+  const count = useSelector((state) => state.counter.value);
+  const dispatch = useDispatch();
   return (
     <div>
-      <div>{printUserData}</div>
-      <div>
-        <button
-          onClick={() => {
-            if (index > 1) {
-              setIndex(index - 1);
-            }
-          }}
-        >
-          Prev
-        </button>
-        <button
-          onClick={() => {
-            setIndex(index + 1);
-          }}
-        >
-          Next
-        </button>
-      </div>
+      <h3>Count : {count} </h3>
+      <button onClick={() => dispatch(increment())}>Increment</button>
+      <button onClick={() => dispatch(decrement())}>Decrement</button>
+      <button onClick={() => dispatch(reset())}>Reset</button>
     </div>
   );
 }
 export default App;
+
